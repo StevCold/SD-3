@@ -4,6 +4,7 @@ module.exports = gql`
   enum RoleType {
     USER
     ADMIN
+    BANNED
   }
 
   enum VoteType {

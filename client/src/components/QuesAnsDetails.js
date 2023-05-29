@@ -169,7 +169,7 @@ const QuesAnsDetails = ({
         <div className={classes.bottomWrapper}>
           {!editAnsOpen && (
             <div className={classes.btnsWrapper}>
-              {user && user.id === author.id && (
+              {user && (user.id === author.id || user.role === 'ADMIN') && (
                 <Button
                   size="small"
                   color="primary"

@@ -45,7 +45,7 @@ const Comment = ({ comment, user, quesAnsId, editComment, deleteComment }) => {
               <EditIcon fontSize="inherit" color="secondary" />
             )}
           </Typography>
-          {user && user.id === comment.author.id && (
+          {user && (user.id === comment.author.id || user.role === 'ADMIN') && (
             <Button
               size="small"
               color="primary"

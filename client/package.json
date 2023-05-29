@@ -14,11 +14,13 @@
     "apollo-link-context": "^1.0.20",
     "date-fns": "^2.16.1",
     "graphql": "^15.4.0",
+    "nodemailer": "^6.9.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.11.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
+    "twilio": "^4.11.1",
     "typeface-montserrat": "^1.1.13",
     "web-vitals": "^0.2.4",
     "yup": "^0.30.0"

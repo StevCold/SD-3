@@ -150,8 +150,19 @@ module.exports = {
           question.author.toString() !== user._id.toString() &&
           user.role !== 'admin'
         ) {
+          if (user.role === 'banned') {
+          
+          const accountSid = "ACa0781efae1c0b408ade901500622000d";
+          const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+          const client = require("twilio")(accountSid, authToken);
+          client.messages
+            .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+              .then(message => console.log(message.sid));
+          }
           throw new AuthenticationError('Access is denied.');
         }
+
+        
 
         await Question.findByIdAndDelete(quesId);
         return question._id;
@@ -176,6 +187,7 @@ module.exports = {
       };
 
       try {
+        const user = await User.findById(loggedUser.id);
         const question = await Question.findById(quesId);
         if (!question) {
           throw new UserInputError(
@@ -183,9 +195,21 @@ module.exports = {
           );
         }
 
-        if (question.author.toString() !== loggedUser.id) {
+        if (question.author.toString() !== loggedUser.id &&
+        user.role !== 'admin') {
+          if (user.role === 'banned') {
+          
+          const accountSid = "ACa0781efae1c0b408ade901500622000d";
+          const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+          const client = require("twilio")(accountSid, authToken);
+          client.messages
+            .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+              .then(message => console.log(message.sid));
+          }
           throw new AuthenticationError('Access is denied.');
         }
+
+        
 
         const updatedQues = await Question.findByIdAndUpdate(
           quesId,

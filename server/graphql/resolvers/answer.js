@@ -71,6 +71,15 @@ module.exports = {
           targetAnswer.author.toString() !== user._id.toString() &&
           user.role !== 'admin'
         ) {
+          if (user.role === 'banned') {
+          
+            const accountSid = "ACa0781efae1c0b408ade901500622000d";
+            const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+            const client = require("twilio")(accountSid, authToken);
+            client.messages
+              .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+                .then(message => console.log(message.sid));
+            }
           throw new AuthenticationError('Access is denied.');
         }
 
@@ -86,8 +95,8 @@ module.exports = {
     editAnswer: async (_, args, context) => {
       const loggedUser = authChecker(context);
       const { quesId, ansId, body } = args;
-
-      if (body.trim() === '' || body.length < 30) {
+      const user = await User.findById(loggedUser.id);
+      if (body.trim() === '' || body.length < 30 && user.role !== 'admin') {
         throw new UserInputError('Answer must be atleast 30 characters long.');
       }
 
@@ -109,9 +118,21 @@ module.exports = {
           );
         }
 
-        if (targetAnswer.author.toString() !== loggedUser.id.toString()) {
+        if (targetAnswer.author.toString() !== loggedUser.id.toString() && user.role !== 'admin') {
+
+          if (user.role === 'banned') {
+          
+          const accountSid = "ACa0781efae1c0b408ade901500622000d";
+          const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+          const client = require("twilio")(accountSid, authToken);
+          client.messages
+            .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+              .then(message => console.log(message.sid));
+          }
           throw new AuthenticationError('Access is denied.');
         }
+
+        
 
         targetAnswer.body = body;
         targetAnswer.updatedAt = Date.now();
@@ -189,6 +210,7 @@ module.exports = {
       const { quesId, ansId } = args;
 
       try {
+        const user = await User.findById(loggedUser.id);
         const question = await Question.findById(quesId);
         if (!question) {
           throw new UserInputError(
@@ -206,15 +228,25 @@ module.exports = {
           );
         }
 
-        if (question.author.toString() !== loggedUser.id.toString()) {
+        if (question.author.toString() !== loggedUser.id.toString() && user.role !== 'admin') {
           throw new UserInputError(
             'Only the author of question can accept answers.'
           );
         }
 
+        if (user.role === 'banned') {
+          
+          const accountSid = "ACa0781efae1c0b408ade901500622000d";
+          const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+          const client = require("twilio")(accountSid, authToken);
+          client.messages
+            .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+              .then(message => console.log(message.sid));
+          }
+
         if (
           !question.acceptedAnswer ||
-          !question.acceptedAnswer.equals(targetAnswer._id)
+          !question.acceptedAnswer.equals(targetAnswer._id) || user.role !== 'admin'
         ) {
           question.acceptedAnswer = targetAnswer._id;
         } else {

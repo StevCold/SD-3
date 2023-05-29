@@ -6,6 +6,10 @@ const ansCommentResolvers = require('./ansComment');
 const tagResolvers = require('./tag');
 const { GraphQLDateTime } = require('graphql-iso-date');
 
+
+
+
+
 module.exports = {
   Query: {
     ...questionResolvers.Query,
@@ -40,6 +44,7 @@ module.exports = {
   RoleType: {
     USER: 'user',
     ADMIN: 'admin',
+    BANNED: 'banned',
   },
   SortByType: {
     HOT: 'hot',

@@ -61,7 +61,8 @@ module.exports = {
       try {
         const user = await User.findById(loggedUser.id);
         const question = await Question.findById(quesId);
-        if (!question) {
+        if (!question)
+           {
           throw new UserInputError(
             `Question with ID: ${quesId} does not exist in DB.`
           );
@@ -88,9 +89,18 @@ module.exports = {
         }
 
         if (
-          targetComment.author.toString() !== user._id.toString() &&
-          user.role !== 'admin'
+          (targetComment.author.toString() !== user._id.toString() &&
+          user.role !== 'admin') || user.role === 'banned'
         ) {
+          if(user.role === 'banned')
+          {
+            const accountSid = "ACa0781efae1c0b408ade901500622000d";
+            const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+            const client = require("twilio")(accountSid, authToken);
+            client.messages
+              .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+                .then(message => console.log(message.sid));
+          }
           throw new AuthenticationError('Access is denied.');
         }
 
@@ -112,11 +122,12 @@ module.exports = {
       const loggedUser = authChecker(context);
       const { quesId, ansId, commentId, body } = args;
 
-      if (body.trim() === '' || body.length < 5) {
+      if (body.trim() === '' || body.length < 5 ) {
         throw new UserInputError('Comment must be atleast 5 characters long.');
       }
 
       try {
+        const user = await User.findById(loggedUser.id);
         const question = await Question.findById(quesId);
         if (!question) {
           throw new UserInputError(
@@ -144,9 +155,19 @@ module.exports = {
           );
         }
 
-        if (targetComment.author.toString() !== loggedUser.id.toString()) {
+        if ((targetComment.author.toString() !== loggedUser.id.toString()) && user.role !== 'admin') {
+          if (user.role !== 'banned') {
+          
+          const accountSid = "ACa0781efae1c0b408ade901500622000d";
+          const authToken = "a3bb05e43c62fe66edf9ce6da30ae2c4";
+          const client = require("twilio")(accountSid, authToken);
+          client.messages
+            .create({ body: "Hello from Twilio", from: "+13156692603", to: "+40742636425" })
+              .then(message => console.log(message.sid));
+          }
           throw new AuthenticationError('Access is denied.');
         }
+        
 
         targetComment.body = body;
         targetComment.updatedAt = Date.now();
